@@ -21,11 +21,6 @@ By implementing an automated classification model, TropicTaste Inc. will be able
 - Optimize Inventory: Accurate classification will allow for better inventory management, ensuring optimal storage conditions for each type of fruit.
 - Increase Customer Satisfaction: Correct identification and classification of fruits will help maintain high quality standards, improving customer satisfaction.
 
-Project Details:
-- Dataset: Use of a dataset containing various numerical features of different exotic fruits.
-- Algorithm: Implementation of the K-Nearest Neighbors (KNN) algorithm for classification.
-- Output: The model must correctly predict the type of fruit based on the data provided.
-
 Project Requirements:
 1. Loading and preprocessing of exotic fruit data.
 2. Handling of any missing values, normalization and scaling of data.
