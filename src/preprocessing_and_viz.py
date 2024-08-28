@@ -18,7 +18,7 @@ def handle_duplicates(df):
     return df_cleaned
 
 
-# Function to perform EDA with plotly.express: box/violin plot and histogram with or without boxplot for comparison
+# Function to perform EDA with plotly.express: box/violin plot and histogram with or without boxplot and comparison
 def plot_feature_distribution(df, feature, comparison = None):
     if comparison:
         fig = px.histogram(df, x=feature, labels={feature:feature},
@@ -28,4 +28,18 @@ def plot_feature_distribution(df, feature, comparison = None):
         fig = px.histogram(df, x=feature, labels={feature:feature},
                            marginal='box', #'violin' for violin plot
                            title=f'Distribution of {feature}')
+    fig.show()
+
+
+# Function to perform EDA with plotly.express: scatter plot with comparison using Fruit target column
+def scatter_plot(df, feature_x, feature_y, target):
+    fig = px.scatter(df, feature_x, feature_y,
+                     color=target,
+                     #marginal_x='istogram', marginal_y='rug',
+                     title=f'Scatter Plot {feature_x} vs {feature_y} with target column comparison')
+    
+    fig.update_traces(marker=dict(size=12,
+                              line=dict(width=2,
+                                        color='DarkSlateGrey')),
+                  selector=dict(mode='markers'))
     fig.show()
