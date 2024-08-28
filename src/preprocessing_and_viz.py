@@ -19,5 +19,13 @@ def handle_duplicates(df):
 
 
 # Function to perform EDA with plotly.express: box/violin plot and histogram with or without boxplot for comparison
-def plot_feature_distribution():
-    pass
+def plot_feature_distribution(df, feature, comparison = None):
+    if comparison:
+        fig = px.histogram(df, x=feature, labels={feature:feature},
+                           color=comparison,
+                           title=f'Distribution of {feature} compared with {comparison}')
+    else:
+        fig = px.histogram(df, x=feature, labels={feature:feature},
+                           marginal='box', #'violin' for violin plot
+                           title=f'Distribution of {feature}')
+    fig.show()
