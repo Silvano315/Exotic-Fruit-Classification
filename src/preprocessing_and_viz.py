@@ -27,7 +27,7 @@ def plot_feature_distribution(df, feature, comparison = None):
     else:
         fig = px.histogram(df, x=feature, labels={feature:feature},
                            marginal='box', #'violin' for violin plot
-                           title=f'Distribution of {feature}')
+                           title=f'Distribution of {feature}, with mean {df[feature].mean():.2f} and std {df[feature].std():.2f}')
     fig.show()
 
 
