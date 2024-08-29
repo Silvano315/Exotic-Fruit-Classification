@@ -3,7 +3,8 @@ import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 import plotly.express as px
-
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.compose import ColumnTransformer
 
 # Function to check if there are duplicates in the dataset
 def handle_duplicates(df):
@@ -43,3 +44,33 @@ def scatter_plot(df, feature_x, feature_y, target):
                                         color='DarkSlateGrey')),
                   selector=dict(mode='markers'))
     fig.show()
+
+
+# Function to scale the features of the dataset
+def feature_scaling(df, mixed = False):
+
+    """
+    mixed (bool): if True, it does two different types of scaling (MinMax for not normal distributed feautures, and Standard for normal ones)
+                    If False, it does only MinMaxScaler
+    """
+
+    if mixed:
+        preprocessing = ColumnTransformer(
+        transformers = [
+            ('not_normal', MinMaxScaler(), ['Weight', 'Average diameter', 'Average length']),
+            ('normal', StandardScaler(), ['Peel hardness', 'Sweetness'])
+        ],
+        remainder = 'passthrough'
+        )
+    else:
+        preprocessing = MinMaxScaler()
+
+    X = df.drop(columns='Fruit')
+    y = df['Fruit']
+    feature_names = X.columns
+    X = preprocessing.fit_transform(X)
+
+    X = pd.DataFrame(X, columns=feature_names)
+    df_transformed = pd.concat([X, y], axis=1)
+
+    return df_transformed
