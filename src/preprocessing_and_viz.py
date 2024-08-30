@@ -3,6 +3,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 import seaborn as sns
 import plotly.express as px
+import plotly.figure_factory as ff
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.compose import ColumnTransformer
 
@@ -43,6 +44,17 @@ def scatter_plot(df, feature_x, feature_y, target):
                               line=dict(width=2,
                                         color='DarkSlateGrey')),
                   selector=dict(mode='markers'))
+    fig.show()
+
+
+# Function to perform EDA with plotly.figure_factory: kde plot with normal distribution, also display histogram and rug plot
+def plot_feature_kde(df, feature, bin = 0.2):
+
+    fig = ff.create_distplot([df[feature]], group_labels=[feature], 
+                             bin_size=bin, colors=['coral'],
+                             curve_type='normal'
+                             )
+    fig.update_layout(title_text = f'Distplot with Normal Distribution and Rug Plot for {feature}')
     fig.show()
 
 
