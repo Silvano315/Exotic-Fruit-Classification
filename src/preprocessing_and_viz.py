@@ -47,27 +47,29 @@ def scatter_plot(df, feature_x, feature_y, target):
 
 
 # Function to scale the features of the dataset
-def feature_scaling(df, mixed = False):
-
-    """
-    mixed (bool): if True, it does two different types of scaling (MinMax for not normal distributed feautures, and Standard for normal ones)
-                    If False, it does only MinMaxScaler
-    """
-
-    if mixed:
-        preprocessing = ColumnTransformer(
-        transformers = [
-            ('not_normal', MinMaxScaler(), ['Weight', 'Average diameter', 'Average length']),
-            ('normal', StandardScaler(), ['Peel hardness', 'Sweetness'])
-        ],
-        remainder = 'passthrough'
-        )
-    else:
-        preprocessing = MinMaxScaler()
+def feature_scaling(df, method = 'Standard'):
 
     X = df.drop(columns='Fruit')
     y = df['Fruit']
     feature_names = X.columns
+
+    if method == 'Standard':
+        preprocessing = ColumnTransformer(
+        transformers = [
+            ('standard_scaling', StandardScaler(), feature_names)
+        ],
+        remainder = 'passthrough'
+        )
+    elif method == 'MinMax':
+        preprocessing = ColumnTransformer(
+        transformers = [
+            ('min_max_scaling', MinMaxScaler(), feature_names)
+        ],
+        remainder = 'passthrough'
+        )
+    else:
+        raise NameError('The only available methods are: MinMax and Standard. Type one of that!')
+
     X = preprocessing.fit_transform(X)
 
     X = pd.DataFrame(X, columns=feature_names)
