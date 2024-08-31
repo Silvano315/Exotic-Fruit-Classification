@@ -109,6 +109,91 @@ def evaluate_model(model, X_test, y_test):
     plt.show()
 
 
+# Function to find the best number of neighbors using a k-folds strafied cross validation
+def evaluate_knn_neighbors(df, target, min_neighbors=1, max_neighbors=20, cv=5):
+    X = df.drop(columns=[target])
+    y = df[target]
+    results = {
+        'n_neighbors': [],
+        'train_accuracy_mean': [],
+        'test_accuracy_mean': [],
+        'train_log_loss_mean': [],
+        'test_log_loss_mean': [],
+        'train_accuracy_std': [],
+        'test_accuracy_std': [],
+        'train_log_loss_std': [],
+        'test_log_loss_std': []
+    }
+    
+    skf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=RANDOM_SEED)
+    
+    for n_neighbors in range(min_neighbors, max_neighbors + 1):
+        train_accuracies = []
+        test_accuracies = []
+        train_log_losses = []
+        test_log_losses = []
+        
+        for train_index, test_index in skf.split(X, y):
+            X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+            y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+            
+            knn = KNeighborsClassifier(n_neighbors=n_neighbors)
+            knn.fit(X_train, y_train)
+            y_train_pred = knn.predict(X_train)
+            y_train_proba = knn.predict_proba(X_train)
+            y_test_pred = knn.predict(X_test)
+            y_test_proba = knn.predict_proba(X_test)
+            train_accuracies.append(accuracy_score(y_train, y_train_pred))
+            test_accuracies.append(accuracy_score(y_test, y_test_pred))
+            train_log_losses.append(log_loss(y_train, y_train_proba))
+            test_log_losses.append(log_loss(y_test, y_test_proba))
+        
+        results['n_neighbors'].append(n_neighbors)
+        results['train_accuracy_mean'].append(np.mean(train_accuracies))
+        results['test_accuracy_mean'].append(np.mean(test_accuracies))
+        results['train_log_loss_mean'].append(np.mean(train_log_losses))
+        results['test_log_loss_mean'].append(np.mean(test_log_losses))
+        results['train_accuracy_std'].append(np.std(train_accuracies))
+        results['test_accuracy_std'].append(np.std(test_accuracies))
+        results['train_log_loss_std'].append(np.std(train_log_losses))
+        results['test_log_loss_std'].append(np.std(test_log_losses))
+        
+        print("-"*100)
+        print(f"n_neighbors={n_neighbors}: Train Accuracy={np.mean(train_accuracies):.4f} Test Accuracy={np.mean(test_accuracies):.4f} "
+              f"Train Log Loss={np.mean(train_log_losses):.4f} Test Log Loss={np.mean(test_log_losses):.4f}")
+    
+    results_df = pd.DataFrame(results)
+    
+    return results_df
+
+
+# Function to visualize results from cross-validation to find the best number of neighbors for KNN
+def plot_cv_results(df):
+    
+    sns.set_theme(style="whitegrid")
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
+    
+    ax1.plot(df['n_neighbors'], df['train_accuracy_mean'], '-o', label=f'Train Accuracy (Mean: {df["train_accuracy_mean"].mean():.2f}, Std: {df["train_accuracy_mean"].std():.2f})', color='blue')
+    ax1.plot(df['n_neighbors'], df['test_accuracy_mean'], '-o', label=f'Test Accuracy (Mean: {df["test_accuracy_mean"].mean():.2f}, Std: {df["test_accuracy_mean"].std():.2f})', color='green')
+    ax1.set_xlabel('Number of Neighbors')
+    ax1.set_ylabel('Accuracy')
+    ax1.set_title('Accuracy over Different Numbers of Neighbors')
+    ax1.set_ylim(0.8, 1)  
+    ax1.set_xticks(df['n_neighbors']) 
+    ax1.legend(loc='best', fontsize=10)
+
+    ax2.plot(df['n_neighbors'], df['train_log_loss_mean'], '-o', label=f'Train Log Loss (Mean: {df["train_log_loss_mean"].mean():.2f}, Std: {df["train_log_loss_mean"].std():.2f})', color='red')
+    ax2.plot(df['n_neighbors'], df['test_log_loss_mean'], '-o', label=f'Test Log Loss (Mean: {df["test_log_loss_mean"].mean():.2f}, Std: {df["test_log_loss_mean"].std():.2f})', color='orange')
+    ax2.set_xlabel('Number of Neighbors')
+    ax2.set_ylabel('Log Loss')
+    ax2.set_title('Log Loss over Different Numbers of Neighbors')
+    ax2.set_xticks(df['n_neighbors']) 
+    ax2.legend(loc='best', fontsize=10)
+    
+    plt.tight_layout()
+    plt.show()
+
+
 # Function to performe a cross-validation using the number of neighbors for the best KNN model
 def cross_validation_model(df, target, n_neighbors, cv=5):
 
