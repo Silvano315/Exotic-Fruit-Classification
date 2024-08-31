@@ -24,16 +24,7 @@ def data_split(df, target, test_size = 0.3):
     return X_train, X_test, y_train, y_test
 
 
-# Function to train K-Nearest Neighbors (KNN) model
-def train_KNN(X_train, y_train, num_neighbors = 3):
-
-    knn = KNeighborsClassifier(n_neighbors = num_neighbors)
-    knn.fit(X_train, y_train)
-
-    return knn
-
-
-#
+# Function to train K-Nearest Neighbors (KNN) model and optimize it with a GridSearchCV
 def knn_optimization(X_train, y_train, params=None, k_cv = 5, save_res = False):
 
     if params is None:
