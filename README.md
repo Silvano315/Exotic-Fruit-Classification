@@ -70,16 +70,59 @@ These steps provide a comprehensive understanding of the dataset and ensure that
 
 ## Machine Learning with KNN
 
-In the [`models.py`](src/models.py) file, I have implemented methods for training and evaluating KNN models:
+In the [`models.py`](src/models.py) file, I have implemented methods for training, optimizing and evaluating the K-Nearest Neighbors (KNN) algorithm:
+
+- **Evaluate KNN Algorithms Using a Train-Test Split and GridSearchCV Optimization**:
+  1. **Stratified Dataset Splitting**: The dataset was split into training and testing sets in a stratified manner to ensure that each class is represented proportionally in both subsets.
+  2. **Optimization with GridSearchCV**: A GridSearchCV procedure was applied to find the optimal number of neighbors (`n_neighbors`) for the KNN model. The optimization was based on maximizing the accuracy score on the validation set, resulting in the selection of the best-performing KNN model.
+
+- **Evaluate KNN Algorithms Using a Stratified K-Folds Cross-Validation for Each Number of Neighbors in [1, 20]**:
+  1. **Alternative Optimization Approach**: This method serves as an alternative to the GridSearchCV approach. It helps determine the best number of neighbors for the KNN model by evaluating the model performance for each value of `n_neighbors` from 1 to 20.
+  2. **Advantages of Manual Cross-Validation**: This implementation allows for the direct observation of both training and test metrics, including accuracy and log loss. Moreover, manually controlling the cross-validation process enables more granular tuning of parameters and increases the robustness of the resulting model.
+
+- **Evaluate the Best KNN Model with Number of Neighbors 6 Using Stratified K-Folds Cross-Validation**:
+  1. **Stratified 10-Fold Cross-Validation**: To further enhance the model's robustness and statistical reliability, a stratified K-Folds cross-validation with 10 folds was conducted using the KNN model with 6 neighbors, which was identified as the optimal configuration. This procedure saves the results for multiple metrics, including accuracy, precision, recall, F1 score, and log loss.
+
+These methods provide a thorough evaluation and optimization framework for the KNN model, ensuring it performs reliably across different validation strategies. For detailed results and analysis, please refer to the next section.
 
 
 ## Results
 
-The detailed description of the results, including both the Exploratory Data Analysis (EDA) and model performance evaluations, can be found in the markdown cells of the [notebook](Project_Notebook.ipynb). It is highly recommended to view the results directly within the notebook, as interactive `Plotly` graphs have been utilized for a more dynamic exploration of the data.
+The detailed description of the results, including both the Exploratory Data Analysis (EDA) and model performance evaluations, can be found in the markdown cells of the [notebook](Project_Notebook.ipynb). It is highly recommended to view the results directly within the notebook, as interactive `Plotly` graphs and plots with `Matplotlib` and `Seaborn` have been utilized for a more dynamic and static exploration of the data.
 
 ### Key Findings
 
+1. **Optimization of KNN using Train-Test Split and GridSearchCV**:
+   - The best-performing model was found with `n_neighbors = 6`, achieving an accuracy score of **0.925** on the test set. This indicates a good balance between model complexity and performance.
+   - The Error Bar Plot confirmed that `n_neighbors = 6` not only has the highest mean accuracy score for the test set but also one of the highest for the training set, avoiding potential overfitting.
+   - The Classification Report and Confusion Matrix highlighted that while most labels like Apple, Grape, and Banana achieved high scores in accuracy, precision, and recall, the model showed lower performance for the Orange label. This suggests that either model adjustments or more sophisticated models (e.g., SVM, Random Forest) could be explored to enhance the performance further.
+
+2. **Evaluation with Stratified K-Folds Cross-Validation for Different Neighbors**:
+   - Accuracy and log loss plots showed that while `n_neighbors = 6` optimizes the accuracy for both training and test sets, `n_neighbors = 7` could offer a slight improvement in minimizing the log loss. This insight could be helpful for fine-tuning the model based on different evaluation criteria.
+
+3. **Robustness Assessment of the Best KNN Model with Stratified K-Folds Cross-Validation**:
+   - The cross-validation results showed that while the metric scores for the training set were more stable, the test set scores presented more variability. Nonetheless, the mean values for training and test sets remained comparable across all metrics (e.g., accuracy of **95%** for training and **94%** for testing), indicating a robust model.
+   - Violin plots confirmed that the distribution of results is generally normal for each metric and test set. The lower variance range for the training set further emphasizes the model's stability, while the test set demonstrates slightly more variability, which is expected in a real-world scenario.
+
+
 ## Extra: Visualization with Pygwalker
+
+Leveraging `Pygwalker` for data visualization is a powerful idea and an excellent opportunity to enrich data analysis. Pygwalker is an innovative tool that allows for creating interactive visualizations directly from a pandas DataFrame, transforming it into a user-friendly interface similar to Tableau or Power BI. This approach not only enhances the exploratory data analysis (EDA) process but also facilitates a deeper understanding of the data and the results obtained from machine learning models. This ability is a great asset for showcasing the project's workflow and findings in a compelling manner. 
+
+### Implementation Details
+
+For this project, I implemented **Pygwalker** using **Streamlit**, a popular Python library for building web applications. The app allows users to interactively explore:
+
+- **The Original Dataset**: Provides insights into the raw data, helping to identify potential patterns, outliers, and correlations.
+- **The Transformed Dataset**: Enables a better understanding of the preprocessing effects, such as feature scaling and normalization, on the data distribution and its impact on different features.
+- **Results from the Best KNN Model's Cross-Validation**: Visualizing the model's performance metrics (such as accuracy, precision, recall, etc.) helps in presenting the robustness and reliability of the model in a clear and interactive way.
+
+### Replicability
+
+The entire setup is easily replicable using the provided `app_viz.py` [file](app_viz.py), which contains the Streamlit application code. With a single command (`streamlit run app_viz.py`), you can run the app locally, explore the data interactively, and use these visualizations to enhance your project presentations.
+
+<img src="PygWalker_with_Streamlit.png" alt="Streamlit App Visualization with Pygwalker" width="500">
+
 
 ## Requirements
 
