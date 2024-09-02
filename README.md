@@ -4,9 +4,10 @@
 1. [Introduction](#introduction)
 2. [Dataset](#dataset)
 3. [Preprocessing and EDA](#preprocessing-and-eda)
-4. [Machine Learning](#machine-learning)
-5. [Extra: Visualization with Pygwalker](#extra-visualization-with-pygwalker)
-6. [Requirements](#requirements)
+4. [Machine Learning with KNN](#machine-learning-with-knn)
+5. [Results](#results)
+6. [Extra: Visualization with Pygwalker](#extra-visualization-with-pygwalker)
+7. [Requirements](#requirements)
 
 
 ## Introduction
@@ -31,6 +32,8 @@ Project Requirements:
 7. Create graphs to visualize and compare the model performance.
 8. Analyze and interpret the results to identify areas for improvement.
 
+To complete all the project requirements, I have created a single [notebook](Project_Notebook.ipynb) where all operations are performed and results are visualized. Additionally, I have organized the code into a [`src`](src/) folder containing Python files with the methods used in the notebook.
+
 
 ## Dataset
 
@@ -43,11 +46,44 @@ This dataset contains the following variables:
 - **Sweetness** (1-10): The sweetness of the fruit on a scale of 1 to 10. Continuous variable.
 - **Acidity** (1-10): The acidity of the fruit on a scale of 1 to 10. Continuous variable.
 
+In folder [`Data`](Data/), you can find both the original dataset and the transformed dataset after preprocessing steps.
+
 
 ## Preprocessing and EDA
 
-## Machine Learning
+In the [`data_engineering.py`](src/preprocessing_and_viz.py) file, I have gathered all methods for managing dataset preparation and Exploratory Data Analysis (EDA), including:
+
+- **Analysis of Statistical Information**: An initial analysis of the dataset's statistics revealed that the feature *Peel hardness* does not have a maximum value of 10, as suggested by the project guidelines, but instead, it reaches a value of 13.72.
+
+- **Preprocessing with Duplicate and Missing Values Check**: I searched for any duplicates and missing values in the dataset, but none were found. The dataset remains with a shape of (500, 6).
+
+- **Data Visualization Before Feature Engineering**: Interactive plots were generated using the `Plotly` package to visualize the data. These visualizations provided crucial insights into the relationships between features. It is highly recommended to explore these plots directly in the notebook to gain an interactive, step-by-step understanding, as each plot is accompanied by descriptive markdown comments.
+
+- **Implementation of Feature Scaling Solutions**: Two feature scaling methods were implemented to transform the continuous features:
+  1. **MinMaxScaler**: This method scales the features into a fixed range, which can lead to a loss of significant information.
+  2. **StandardScaler**: This method standardizes features by removing the mean and scaling to unit variance. This was chosen as the final approach due to its statistical robustness, especially for distributions that, with an increasing number of data points, are expected to approach a normal distribution.
+
+- **Second Visualization with Transformed Data**: To validate the chosen preprocessing steps, I visualized the transformed dataset using several types of Plotly plots: Distplot with Normal Distribution, Distribution with Histogram and Box Plot, Scatter Plots with Target Column Comparison.
+
+These steps provide a comprehensive understanding of the dataset and ensure that the data is well-prepared for the subsequent machine learning modeling phase.
+
+
+## Machine Learning with KNN
+
+In the [`models.py`](src/models.py) file, I have implemented methods for training and evaluating KNN models:
+
+
+## Results
+
+The detailed description of the results, including both the Exploratory Data Analysis (EDA) and model performance evaluations, can be found in the markdown cells of the [notebook](Project_Notebook.ipynb). It is highly recommended to view the results directly within the notebook, as interactive `Plotly` graphs have been utilized for a more dynamic exploration of the data.
+
+### Key Findings
 
 ## Extra: Visualization with Pygwalker
 
 ## Requirements
+
+To run this project, I used a 3.11.x Python version. You need to installed the packages in the [requirements](requirements.txt):
+
+```bash
+pip install -r requirements.txt
