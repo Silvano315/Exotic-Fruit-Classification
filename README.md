@@ -121,7 +121,7 @@ For this project, I implemented **Pygwalker** using **Streamlit**, a popular Pyt
 
 The entire setup is easily replicable using the provided `app_viz.py` [file](app_viz.py), which contains the Streamlit application code. With a single command (`streamlit run app_viz.py`), you can run the app locally, explore the data interactively, and use these visualizations to enhance your project presentations.
 
-<img src="Images/PygWalker_with_Streamlit.png" alt="Streamlit App Visualization with Pygwalker" width="500">
+<img src="Images/PygWalker_with_Streamlit.png" alt="Streamlit App Visualization with Pygwalker" width="700">
 
 
 ## Requirements
