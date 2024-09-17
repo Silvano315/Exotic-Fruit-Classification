@@ -1,9 +1,33 @@
-from pandas import DataFrame, concat
+from pandas import DataFrame, concat, read_csv
+from typing import Optional
 import plotly.express as px
 from plotly.graph_objs import Figure
 import plotly.figure_factory as ff
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 from sklearn.compose import ColumnTransformer
+
+
+
+def read_data(file_path: str, chunksize: Optional[int] = None) -> DataFrame:
+    """
+    Reads a CSV file into a DataFrame, with optional chunking for large files.
+
+    Parameters:
+    file_path (str): Path to the CSV file.
+    chunksize (int, optional): Number of rows to read at a time if chunking is needed.
+
+    Returns:
+    DataFrame: The loaded DataFrame.
+    """
+    try:
+        if chunksize:
+            chunks = read_csv(file_path, chunksize=chunksize)
+            return concat(chunks, ignore_index=True)
+        else:
+            return read_csv(file_path)
+    except FileNotFoundError:
+        print(f"Error: The file {file_path} does not exist.")
+        return DataFrame()
 
 
 def handle_duplicates(df: DataFrame) -> DataFrame:
